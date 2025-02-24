@@ -1,15 +1,16 @@
-export interface Sentence {
+export interface SentenceItem {
   language: string
   content: string
 }
 
-export interface SentenceGroup {
-  id: number
-  sentences: Sentence[]
+export interface Sentence {
+  id: string
+  bookId: string
+  sentenceItems: SentenceItem[]
 }
 
 export interface Book {
-  id: number
+  id: string
   title: string
-  sentenceGroups: SentenceGroup[]|null
+  sentences: Sentence[]
 }

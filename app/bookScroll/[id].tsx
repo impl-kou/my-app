@@ -1,41 +1,18 @@
-import { AnswerInput } from "@/components/AnswerInput"
-import { ThemedText } from "@/components/ThemedText"
+import { Sentence } from "@/components/Sentence"
 import { ThemedView } from "@/components/ThemedView"
 import { bookData } from "@/data/bookData"
 import React, { useRef } from "react"
 import {
-  View,
-  Text,
   Dimensions,
-  FlatList,
   Animated,
   StyleSheet,
   StatusBar,
+  ScrollView,
+  View,
 } from "react-native"
+import AnswerInput from "@/components/AnswerInput"
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window")
-
-export type SentenceType = { language: string; content: string }
-type SentenceProps = { sentence: SentenceType }
-
-const Sentence = ({ sentence }: SentenceProps) => (
-  <ThemedView style={styles.sentence}>
-    <ThemedText style={styles.language}>{sentence.language}</ThemedText>
-    <ThemedText style={styles.content}>{sentence.content}</ThemedText>
-  </ThemedView>
-)
-
-const SentenceGroup = ({ sentences }: { sentences: SentenceType[] }) => (
-  <View>
-    <FlatList
-      style={styles.sentenceGroup}
-      data={sentences}
-      renderItem={({ item }) => <Sentence sentence={item} />}
-      keyExtractor={(item) => item.language}
-    />
-    <AnswerInput sentence={sentences[0]} />
-  </View>
-)
+const { height: SCREEN_HEIGHT, width: SCREEN_WIDTH } = Dimensions.get("window")
 
 export default function SentencesScroll() {
   const scrollY = useRef(new Animated.Value(0)).current
@@ -44,7 +21,6 @@ export default function SentencesScroll() {
     <Animated.View
       style={[
         styles.itemContainer,
-        { backgroundColor: item.color },
         {
           transform: [
             {
@@ -62,75 +38,62 @@ export default function SentencesScroll() {
         },
       ]}
     >
-      {/* <Text style={styles.text}>{item.title}</Text> */}
-      <SentenceGroup sentences={item.sentences} />
+      <ScrollView style={{ height: SCREEN_HEIGHT }}>
+        <Sentence sentence={item} withInput />
+        <AnswerInput
+          sentenceItem={item.sentenceItems[0]}
+          style={styles.answerInput}
+        />
+      </ScrollView>
     </Animated.View>
   )
 
   return (
-    <Animated.FlatList
-      data={bookData}
-      keyExtractor={(item) => item.id.toString()}
-      renderItem={renderItem}
-      pagingEnabled
-      showsVerticalScrollIndicator={false}
-      snapToInterval={SCREEN_HEIGHT}
-      decelerationRate="fast"
-      onScroll={Animated.event(
-        [{ nativeEvent: { contentOffset: { y: scrollY } } }],
-        { useNativeDriver: true }
-      )}
-    />
+    <ThemedView style={styles.container}>
+      <Animated.FlatList
+        data={bookData}
+        keyExtractor={(item) => item.id.toString()}
+        renderItem={renderItem}
+        pagingEnabled
+        showsVerticalScrollIndicator={false}
+        snapToInterval={SCREEN_HEIGHT}
+        decelerationRate="fast"
+        onScroll={Animated.event(
+          [{ nativeEvent: { contentOffset: { y: scrollY } } }],
+          { useNativeDriver: true }
+        )}
+      />
+    </ThemedView>
   )
 }
 
 export const styles = StyleSheet.create({
-  correctInput: {
-    color: "green",
-    fontSize: 32,
-    width: "100%",
-  },
-  incorrectInput: {
-    color: "red",
-    fontSize: 32,
-    width: "100%",
-  },
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
-  },
-  sentenceGroup: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 10,
-    marginBottom: 10,
-  },
-  sentence: {
-    flexDirection: "row",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  language: {
-    fontSize: 32,
-    color: "gray",
-    width: 50, // Adjusted width for both webpage and mobile screen
-    lineHeight: 40,
-  },
-  content: {
-    fontSize: 32,
-    lineHeight: 40,
-  },
-  title: {
-    fontSize: 32,
+    width: "100%",
+    backgroundColor: "#f0f0f0",
   },
   itemContainer: {
     height: SCREEN_HEIGHT,
     justifyContent: "center",
     alignItems: "center",
+    padding: 16,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    marginVertical: 8,
+    marginHorizontal: 16,
   },
-  text: {
-    fontSize: 32,
-    color: "#fff",
-    fontWeight: "bold",
+  answerInput: {
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    margin: 16,
   },
 })

@@ -3,7 +3,7 @@ import { View, Text, Button, StyleSheet } from "react-native"
 import { ThemedView } from "@/components/ThemedView"
 import { ThemedText } from "@/components/ThemedText"
 import { ThemedInput } from "@/components/ThemedInput"
-import { useBookContext } from "@/contexts/BookContexts"
+import { useBookContext } from "@/contexts/BookContext"
 import { Book } from "@/types/models"
 
 export default function CreateBookScreen() {
@@ -13,9 +13,9 @@ export default function CreateBookScreen() {
 
   const handleAddBook = () => {
     const newBook: Book = {
-      id: parseInt(id, 10),
+      id,
       title,
-      sentenceGroups: [],
+      sentences: [],
     }
     addBook(newBook)
     setTitle("")

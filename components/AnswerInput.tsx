@@ -3,21 +3,32 @@ import { ThemedView } from "@/components/ThemedView"
 import React, { useEffect } from "react"
 import { StyleSheet, StatusBar } from "react-native"
 import { ThemedInput } from "./ThemedInput"
-import { Sentence } from "@/types/models"
+import { SentenceItem } from "@/types/models"
 
-export const AnswerInput = ({ sentence }: { sentence: Sentence }) => {
+export const AnswerInput = ({
+  sentenceItem,
+  style,
+}: {
+  sentenceItem: SentenceItem
+  style?: any
+}) => {
   const [text, onChangeText] = React.useState<string>("")
   const [isCorrect, setIsCorrect] = React.useState(true)
+
   useEffect(() => {
-    setIsCorrect(sentence.content.startsWith(text))
+    setIsCorrect(sentenceItem.content.startsWith(text))
   }, [text])
+
   return (
-    <ThemedView style={styles.sentence}>
-      <ThemedText style={styles.language}>{sentence.language}</ThemedText>
+    <ThemedView style={[styles.sentence, style]}>
+      <ThemedText style={styles.language}>{sentenceItem.language}</ThemedText>
       <ThemedInput
         lightColor={isCorrect ? "blue" : "red"}
         darkColor={isCorrect ? "green" : "orange"}
-        style={styles.input}
+        style={[
+          styles.input,
+          isCorrect ? styles.correctInput : styles.incorrectInput,
+        ]}
         onChangeText={onChangeText}
         value={text}
         placeholder="Type your answer here"
@@ -26,20 +37,39 @@ export const AnswerInput = ({ sentence }: { sentence: Sentence }) => {
   )
 }
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
+  sentence: {
+    flexDirection: "row",
+    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 16,
+    backgroundColor: "#f8f8f8",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+    alignItems: "center",
+  },
+  language: {
+    fontSize: 18,
+    color: "gray",
+    marginRight: 10,
+  },
   input: {
-    fontSize: 32,
-    width: "100%",
+    flex: 1,
+    fontSize: 18,
+    padding: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
   },
   correctInput: {
-    color: "green",
-    fontSize: 32,
-    width: "100%",
+    borderColor: "green",
   },
   incorrectInput: {
-    color: "red",
-    fontSize: 32,
-    width: "100%",
+    borderColor: "red",
   },
   container: {
     flex: 1,
@@ -50,17 +80,6 @@ export const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight || 10,
     marginBottom: 10,
   },
-  sentence: {
-    flexDirection: "row",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  language: {
-    fontSize: 32,
-    color: "gray",
-    width: 50,
-  },
   content: {
     fontSize: 32,
   },
@@ -68,3 +87,5 @@ export const styles = StyleSheet.create({
     fontSize: 32,
   },
 })
+
+export default AnswerInput

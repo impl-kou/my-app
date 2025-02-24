@@ -22,34 +22,47 @@ const DATA = [
 type ItemProps = { title: string; id: string }
 
 const Item = ({ title, id }: ItemProps) => (
-  <Link href={`/bookScroll/${id}`}>
-    <ThemedView style={styles.item}>
-      <ThemedText style={styles.title}>{title}</ThemedText>
-    </ThemedView>
+  <Link href={`/bookScroll/${id}`} style={styles.itemContainer}>
+    {/* <ThemedView style={styles.itemContainer}> */}
+    <ThemedText style={styles.itemTitle} numberOfLines={1} ellipsizeMode="tail">
+      {title}
+    </ThemedText>
+    {/* </ThemedView> */}
   </Link>
 )
 
-export default function OtherScreen() {
+export default function BookScrollScreen() {
   return (
     <FlatList
       data={DATA}
       renderItem={({ item }) => <Item title={item.title} id={item.id} />}
       keyExtractor={(item) => item.id}
+      contentContainerStyle={styles.listContainer}
     />
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+  listContainer: {
+    flexGrow: 1,
+    paddingVertical: 16,
+    backgroundColor: "#f0f0f0",
   },
-  item: {
+  itemContainer: {
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  title: {
-    fontSize: 32,
+  itemTitle: {
+    fontSize: 20,
+    color: "#333",
+    flexShrink: 1,
   },
 })

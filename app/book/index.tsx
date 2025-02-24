@@ -1,24 +1,23 @@
 import { ThemedText } from "@/components/ThemedText"
 import { ThemedView } from "@/components/ThemedView"
-import { useBookContext } from "@/contexts/BookContexts"
+import { useBookContext } from "@/contexts/BookContext"
 import { Link } from "expo-router"
 import React from "react"
 import { FlatList, StyleSheet, StatusBar } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
 import { TouchableOpacity } from "react-native"
+import { SafeAreaView } from "react-native-safe-area-context"
 
-type ItemProps = { title: string; id: number; removeBook: (id: number) => void }
+type ItemProps = { title: string; id: string; removeBook: (id: string) => void }
 
 function Item({ title, id, removeBook }: ItemProps) {
   const handleRemove = () => {
-    removeBook(Number(id))
+    removeBook(id)
   }
 
   return (
     <ThemedView style={styles.item}>
-      <Link href={`/book/${id}`}>
-        <ThemedText style={styles.title}>{title}</ThemedText>
-      </Link>
+      <Link href={`/book/${id}`}>{title}</Link>
       <TouchableOpacity onPress={handleRemove} style={styles.removeButton}>
         <Ionicons name="trash" size={24} color="black" />
       </TouchableOpacity>
@@ -29,24 +28,22 @@ function Item({ title, id, removeBook }: ItemProps) {
 export default function BookList() {
   const { books, removeBook } = useBookContext()
   return (
-    <ThemedView style={styles.container}>
-      <FlatList
-        data={books}
-        renderItem={({ item }) => (
-          <Item
-            title={item.title}
-            id={item.id}
-            removeBook={removeBook}
-          />
-        )}
-        keyExtractor={(item) => item.id?.toString() ?? "1"}
-      />
-      <TouchableOpacity onPress={() => {}} style={styles.addButton}>
-        <Link href="/book/create">
-          <Ionicons name="add-circle" size={24} color="black" />
-        </Link>
-      </TouchableOpacity>
-    </ThemedView>
+    <SafeAreaView>
+      <ThemedView style={styles.container}>
+        <FlatList
+          data={books}
+          renderItem={({ item }) => (
+            <Item title={item.title} id={item.id} removeBook={removeBook} />
+          )}
+          keyExtractor={(item) => item.id?.toString() ?? "1"}
+        />
+        <TouchableOpacity onPress={() => {}} style={styles.addButton}>
+          <Link href="/book/create">
+            <Ionicons name="add-circle" size={24} color="black" />
+          </Link>
+        </TouchableOpacity>
+      </ThemedView>
+    </SafeAreaView>
   )
 }
 

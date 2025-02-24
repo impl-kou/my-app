@@ -7,8 +7,8 @@ import { useEffect } from 'react';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { BookProvider } from '@/contexts/BookContexts';
-
+import { BookProvider } from "@/contexts/BookContext"
+import { SentenceProvider } from "@/contexts/SentenceContext"
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync()
@@ -32,13 +32,15 @@ export default function RootLayout() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <BookProvider>
-        {" "}
-        {/* Wrap the application with the BookProvider */}
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-        <StatusBar style="auto" />
+        <SentenceProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen name="book" />
+            <Stack.Screen name="bookScroll" options={{ headerShown: false }} />
+            <Stack.Screen name="+not-found" />
+          </Stack>
+          <StatusBar style="auto" />
+        </SentenceProvider>
       </BookProvider>
     </ThemeProvider>
   )
