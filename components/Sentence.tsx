@@ -5,8 +5,8 @@ import React from "react"
 import { FlatList, StyleSheet, StatusBar } from "react-native"
 import { SentenceItem } from "@/components/SentenceItem"
 
-type SentenceProps = { sentence: SentenceType; withInput?: boolean }
-export const Sentence = ({ sentence, withInput }: SentenceProps) => (
+type SentenceProps = { sentence: SentenceType }
+export const Sentence = ({ sentence }: SentenceProps) => (
   <ThemedView style={styles.sentenceGroup}>
     <FlatList
       style={styles.sentenceGroup}
@@ -14,7 +14,6 @@ export const Sentence = ({ sentence, withInput }: SentenceProps) => (
       renderItem={({ item }) => <SentenceItem sentenceItem={item} />}
       keyExtractor={(item) => item.language}
     />
-    {withInput && <AnswerInput sentenceItem={sentence.sentenceItems[0]} />}
   </ThemedView>
 )
 
