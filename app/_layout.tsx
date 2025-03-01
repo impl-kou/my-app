@@ -35,7 +35,7 @@ export default function RootLayout() {
         <SentenceProvider>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="book" />
+            <Stack.Screen name="book"  options={{ headerShown: false }}/>
             <Stack.Screen name="bookScroll" options={{ headerShown: false }} />
             <Stack.Screen name="+not-found" />
           </Stack>
