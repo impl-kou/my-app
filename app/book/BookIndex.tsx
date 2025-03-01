@@ -25,10 +25,10 @@ function Item({ title, id, removeBook }: ItemProps) {
   )
 }
 
-export default function BookList() {
+export default function BookListScreen() {
   const { books, removeBook } = useBookContext()
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.safeArea}>
       <ThemedView style={styles.container}>
         <FlatList
           data={books}
@@ -48,6 +48,9 @@ export default function BookList() {
 }
 
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
