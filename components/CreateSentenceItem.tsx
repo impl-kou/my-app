@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction, useState } from "react"
-import { Button, StyleSheet } from "react-native"
+import { Button, StyleSheet, TouchableOpacity, Text } from "react-native"
 import { ThemedView } from "@/components/ThemedView"
 import { ThemedText } from "@/components/ThemedText"
 import { ThemedInput } from "@/components/ThemedInput"
@@ -46,7 +46,9 @@ export default function CreateSentenceItem({
         onChangeText={setContent}
         placeholder="Enter content"
       />
-      <Button title="Add Sentence" onPress={handleAddSentence} />
+      <TouchableOpacity style={styles.button} onPress={handleAddSentence}>
+        <Text style={styles.buttonText}>Add Sentence</Text>
+      </TouchableOpacity>
     </ThemedView>
   )
 }
@@ -55,10 +57,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "#fff",
   },
   label: {
     fontSize: 18,
     marginBottom: 8,
+    color: "#333",
   },
   input: {
     fontSize: 16,
@@ -67,5 +71,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 4,
+    backgroundColor: "#f9f9f9",
+  },
+  button: {
+    backgroundColor: "#007bff",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
   },
 })
