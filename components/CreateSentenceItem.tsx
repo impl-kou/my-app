@@ -1,93 +1,57 @@
-import React, { Dispatch, SetStateAction, useState } from "react";
-import { Button, StyleSheet, TouchableOpacity, Text } from "react-native";
-import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedInput } from "@/components/ThemedInput";
-import { useSentenceContext } from "@/contexts/SentenceContext";
-import { SentenceItem, Sentence } from "@/types/models";
+import { SentenceItem } from "@/types/models"
+import { ThemedInput } from "./ThemedInput"
+import { ThemedText } from "./ThemedText"
+import { ThemedView } from "./ThemedView"
+import { StyleSheet } from "react-native"
+import { useEffect, useState } from "react"
 
-type CreateSentenceItemProps = {
-  bookId: string;
-  sentenceId: string | null;
-  fallback?: Dispatch<SetStateAction<Sentence | undefined>>;
-};
+export function CreateSentenceItem({
+  sentenceItem,
+  update,
+}: {
+  sentenceItem: SentenceItem
+  update: (sentenceItem: SentenceItem) => void
+}) {
+  const [language, setLanguage] = useState(sentenceItem.language)
+  const [content, setContent] = useState(sentenceItem.content)
 
-export default function CreateSentenceItem({
-  bookId,
-  sentenceId,
-  fallback,
-}: CreateSentenceItemProps) {
-  const { addSentenceItem } = useSentenceContext();
-  const [language, setLanguage] = useState("");
-  const [content, setContent] = useState("");
-
-  const handleAddSentence = () => {
-    const newSentenceItem: SentenceItem = {
-      language,
-      content,
-    };
-    fallback && fallback(addSentenceItem(bookId, sentenceId, newSentenceItem));
-    setLanguage("");
-    setContent("");
-  };
+  useEffect(() => {
+    update({ language, content })
+  }, [language, content])
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText style={styles.label}>Language</ThemedText>
+    <ThemedView style={styles.itemContainer}>
+      <ThemedText style={styles.label}>laguage</ThemedText>
       <ThemedInput
         style={styles.input}
         value={language}
         onChangeText={setLanguage}
-        placeholder="Enter language"
+        placeholder="language"
       />
-      <ThemedText style={styles.label}>Content</ThemedText>
+      <ThemedText style={styles.label}>content</ThemedText>
       <ThemedInput
         style={styles.input}
         value={content}
         onChangeText={setContent}
-        placeholder="Enter content"
+        placeholder="content"
       />
-      <TouchableOpacity style={styles.button} onPress={handleAddSentence}>
-        <Text style={styles.buttonText}>Add Sentence</Text>
-      </TouchableOpacity>
     </ThemedView>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 16,
-    backgroundColor: "#fff",
-    borderRadius: 8,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-    marginVertical: 16,
+  itemContainer: {
+    paddingVertical: 10,
+    margin: 10,
   },
   label: {
-    fontSize: 18,
-    marginBottom: 8,
-    color: "#333",
+    fontSize: 15,
   },
   input: {
-    fontSize: 16,
-    padding: 8,
-    marginBottom: 16,
+    fontSize: 20,
+    width: "100%",
     borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 4,
-    backgroundColor: "#f9f9f9",
-  },
-  button: {
-    backgroundColor: "#007bff",
-    padding: 10,
+    borderColor: "green",
     borderRadius: 5,
-    alignItems: "center",
   },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-  },
-});
+})

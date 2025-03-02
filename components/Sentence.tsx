@@ -6,16 +6,18 @@ import { FlatList, StyleSheet, StatusBar } from "react-native"
 import { SentenceItem } from "@/components/SentenceItem"
 
 type SentenceProps = { sentence: SentenceType }
-export const Sentence = ({ sentence }: SentenceProps) => (
-  <ThemedView style={styles.sentenceGroup}>
-    <FlatList
-      style={styles.sentenceGroup}
-      data={sentence.sentenceItems}
-      renderItem={({ item }) => <SentenceItem sentenceItem={item} />}
-      keyExtractor={(item) => item.language}
-    />
-  </ThemedView>
-)
+export default function Sentence({ sentence }: SentenceProps) {
+  return (
+    <ThemedView style={styles.sentenceGroup}>
+      <FlatList
+        style={styles.sentenceGroup}
+        data={sentence.sentenceItems}
+        renderItem={({ item }) => <SentenceItem sentenceItem={item} />}
+        keyExtractor={(item, index) => index.toString()}
+      />
+    </ThemedView>
+  )
+}
 
 const styles = StyleSheet.create({
   sentenceGroup: {
@@ -24,5 +26,3 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
 })
-
-export default Sentence

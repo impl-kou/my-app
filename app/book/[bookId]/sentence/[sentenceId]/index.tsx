@@ -5,8 +5,8 @@ import { useLocalSearchParams } from "expo-router";
 import { useSentenceContext } from "@/contexts/SentenceContext";
 import CreateSentenceItem from "@/components/CreateSentenceItem";
 import { ThemedText } from "@/components/ThemedText";
-import { SafeAreaView, StyleSheet } from "react-native-safe-area-context";
-
+import { SafeAreaView } from "react-native-safe-area-context"
+import { StyleSheet } from "react-native"
 const firstString = (value: string | string[]) =>
   Array.isArray(value) ? value[0] : value;
 

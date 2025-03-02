@@ -1,5 +1,4 @@
 import { ThemedText } from "@/components/ThemedText"
-import { ThemedView } from "@/components/ThemedView"
 import { Link, useLocalSearchParams } from "expo-router"
 import React from "react"
 import {
@@ -12,32 +11,42 @@ import {
 
 import { useBookContext } from "@/contexts/BookContext"
 import { Ionicons } from "@expo/vector-icons"
-import { Sentence } from "@/components/Sentence"
+import Sentence from "@/components/Sentence"
+
+type params = {
+  bookId: string
+}
 
 export default function BookScreen() {
-  const { bookId } = useLocalSearchParams()
+  const { bookId } = useLocalSearchParams<params>()
   const { getBook } = useBookContext()
-  const book = getBook(Array.isArray(bookId) ? bookId[0] : bookId)
+  const book = getBook(bookId)
   if (!book) {
     return <ThemedText>Book not found</ThemedText>
   }
+  const addSentenceButton = (
+    <TouchableOpacity onPress={() => {}} style={styles.button}>
+      <Link href={`/book/${bookId}/createSentence`}>
+        <Ionicons name="add-circle" size={24} color="green" />
+      </Link>
+    </TouchableOpacity>
+  )
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={styles.container}>
+      <ThemedText>informations about this book</ThemedText>
+      <ThemedText>id: {bookId}</ThemedText>
       <FlatList
         data={book.sentences}
         renderItem={({ item }) => <Sentence sentence={item} />}
         keyExtractor={(item) => item.id.toString()}
       />
-      <TouchableOpacity onPress={() => {}} style={styles.button}>
-        <Link href={`/book/${bookId}/sentence/create`}>
-          <Ionicons name="add-circle" size={24} color="black" />
-        </Link>
-      </TouchableOpacity>
+      {addSentenceButton}
     </SafeAreaView>
   )
 }
-export const styles = StyleSheet.create({
+
+const styles = StyleSheet.create({
   input: {
     fontSize: 32,
     width: "100%",
@@ -87,5 +96,13 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "blue",
     borderRadius: 5,
+  },
+  addButton: {
+    position: "absolute",
+    bottom: 30,
+    right: 30,
+    backgroundColor: "blue",
+    borderRadius: 50,
+    padding: 10,
   },
 })

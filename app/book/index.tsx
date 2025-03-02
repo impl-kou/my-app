@@ -21,7 +21,11 @@ function Item({ title, id, removeBook }: ItemProps) {
 
   return (
     <ThemedView style={styles.itemContainer}>
-      <Link href={`/book/${id}`}>{title}</Link>
+      <Link href={`/book/${id}`}>
+        <ThemedText style={styles.title}>
+          {title}
+        </ThemedText>
+      </Link>
       <TouchableOpacity onPress={handleRemove} style={styles.removeButton}>
         <Ionicons name="trash" size={24} color="black" />
       </TouchableOpacity>
@@ -68,7 +72,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
   },
   title: {
-    fontSize: 32,
+    fontSize: 20,
   },
   removeButton: {
     padding: 10,

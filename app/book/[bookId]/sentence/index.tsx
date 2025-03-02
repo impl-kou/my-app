@@ -31,7 +31,8 @@ export default function BookScreen() {
     </ThemedView>
   )
 }
-export const styles = StyleSheet.create({
+
+const styles = StyleSheet.create({
   input: {
     fontSize: 32,
     width: "100%",

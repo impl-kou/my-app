@@ -4,16 +4,12 @@ import { Sentence, SentenceItem } from "@/types/models"
 
 type SentenceContextType = {
   sentences: Sentence[]
-  addSentence: (bookId: string, sentence: Sentence) => Sentence
+  addSentence: (sentence: Sentence) => Sentence
   updateSentence: (sentence: Sentence) => void
   removeSentence: (id: string) => void
   getSentence: (id: string) => Sentence | undefined
   getSentencesByBookId: (bookId: string) => Sentence[]
-  addSentenceItem: (
-    bookId: string | null,
-    sentenceId: string | null,
-    sentenceItem: SentenceItem
-  ) => Sentence
+  updateOrAddSentence: (id: string | undefined, sentence: Sentence) => Sentence
 }
 
 const SentenceContext = createContext<SentenceContextType | undefined>(
@@ -39,9 +35,9 @@ export const SentenceProvider: React.FC<{ children: React.ReactNode }> = ({
     await AsyncStorage.setItem("sentences", JSON.stringify(sentences))
   }
 
-  const addSentence = (bookId: string, sentence: Sentence) => {
+  const addSentence = (sentence: Sentence) => {
     const id = sentences.length > 0 ? sentences[sentences.length - 1].id + 1 : 1
-    const newSentence = { ...sentence, id, bookId } as Sentence
+    const newSentence = { ...sentence, id } as Sentence
     console.log("add sentence", newSentence)
     const updatedSentences = [...sentences, newSentence]
     setSentences(updatedSentences)
@@ -55,6 +51,17 @@ export const SentenceProvider: React.FC<{ children: React.ReactNode }> = ({
     )
     setSentences(updatedSentences)
     saveSentences(updatedSentences)
+  }
+
+  const updateOrAddSentence = (id: string | undefined, sentence: Sentence) => {
+    if (id) {
+      const existingSentence = sentences.find((s) => s.id === id)
+      if (existingSentence) {
+        existingSentence.sentenceItems = sentence.sentenceItems
+        return existingSentence
+      }
+    }
+    return addSentence(sentence)
   }
 
   const removeSentence = (id: string) => {
@@ -71,28 +78,6 @@ export const SentenceProvider: React.FC<{ children: React.ReactNode }> = ({
     return sentences.filter((sentence) => sentence.bookId === bookId)
   }
 
-  const addSentenceItem = (
-    bookId: string | null,
-    sentenceId: string | null,
-    sentenceItem: SentenceItem
-  ) => {
-    var sentence = sentences.find((sentence) => sentence.id === sentenceId)
-    if (!sentence) {
-      return addSentence(bookId ?? "", {
-        id: "",
-        bookId: bookId ?? "",
-        sentenceItems: [sentenceItem],
-      })
-    } else {
-      const updatedSentence = {
-        ...sentence,
-        sentenceItems: [...sentence.sentenceItems, sentenceItem],
-      }
-      updateSentence(updatedSentence)
-      return updatedSentence
-    }
-  }
-
   return (
     <SentenceContext.Provider
       value={{
@@ -102,7 +87,7 @@ export const SentenceProvider: React.FC<{ children: React.ReactNode }> = ({
         removeSentence,
         getSentence,
         getSentencesByBookId,
-        addSentenceItem,
+        updateOrAddSentence,
       }}
     >
       {children}
